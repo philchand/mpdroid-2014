@@ -236,8 +236,6 @@ public class NowPlayingFragment extends Fragment implements StatusChangeListener
         progressBarTrack = (SeekBar) view.findViewById(R.id.progress_track);
         volumeIcon = (ImageView) view.findViewById(R.id.volume_icon);
         
-        //progressBarVolume.setVisibility(View.GONE);
-        //progressBarVolume.setEnabled(false);
         try {
             final int volume = app.oMPDAsyncHelper.oMPD.getStatus().getVolume();
             if (volume == -1)

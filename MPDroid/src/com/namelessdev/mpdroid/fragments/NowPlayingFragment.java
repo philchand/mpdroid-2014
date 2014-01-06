@@ -8,6 +8,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.net.wifi.WifiManager;
+import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -68,6 +69,7 @@ public class NowPlayingFragment extends Fragment implements StatusChangeListener
     private boolean repeatCurrent = false;
     private PopupMenu popupMenu = null;
     private PopupMenu popupMenuStream = null;
+    private ImageView volumeIcon = null;
 
     public static final int ALBUMS = 4;
 
@@ -185,6 +187,12 @@ public class NowPlayingFragment extends Fragment implements StatusChangeListener
                         @Override
                         public void run() {
                             progressBarVolume.setProgress(volume);
+                            if (volume == -1)
+                            {
+                            	progressBarVolume.setEnabled(false);
+                            	progressBarVolume.setVisibility(View.GONE);
+                            	volumeIcon.setVisibility(View.GONE);
+                            }
                         }
                     });
                 } catch (MPDServerException e) {
@@ -226,6 +234,23 @@ public class NowPlayingFragment extends Fragment implements StatusChangeListener
 
         progressBarVolume = (SeekBar) view.findViewById(R.id.progress_volume);
         progressBarTrack = (SeekBar) view.findViewById(R.id.progress_track);
+        volumeIcon = (ImageView) view.findViewById(R.id.volume_icon);
+        
+        //progressBarVolume.setVisibility(View.GONE);
+        //progressBarVolume.setEnabled(false);
+        try {
+            final int volume = app.oMPDAsyncHelper.oMPD.getStatus().getVolume();
+            if (volume == -1)
+            {
+            	progressBarVolume.setEnabled(false);
+            	progressBarVolume.setVisibility(View.GONE);
+            	volumeIcon.setVisibility(View.GONE);
+            }
+            	
+        } catch (MPDServerException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
         trackTime = (TextView) view.findViewById(R.id.trackTime);
         trackTotalTime = (TextView) view.findViewById(R.id.trackTotalTime);
